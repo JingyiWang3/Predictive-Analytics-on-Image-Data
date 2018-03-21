@@ -105,8 +105,8 @@ tune <- function(dat_train ,label_train,
     # best cv.error
     cv_error =  min(error_matrix)
     # best parameter
-    best_par = list(depth = par$depth[which(error_matrix == min(error_matrix), arr.ind = T)[1]],
-                    child_weight = par$depth[which(error_matrix == min(error_matrix), arr.ind = T)[2]])
+    best_par = list(depth = max_depth_values[which(error_matrix == min(error_matrix), arr.ind = T)[1]],
+                    child_weight = min_child_weight_values[which(error_matrix == min(error_matrix), arr.ind = T)[2]])
 
   }
   

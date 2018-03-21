@@ -31,8 +31,18 @@ test <- function(fit.model, dat_test,
     # predict
     pred = predict.boosting(fit.model,newdata = test)$class
   }
+
+  if (run.gbm ==T){
+    if(is.null(par)){
+      ntrees = 50
+    }else{
+      ntrees = par$ntrees
+    }
+    pred <- predict(fit.model, newdata=as.data.frame(dat_test),n.trees = 50)
+  }
   
-  else{
+  if (run.xgboost ==T){
+    
     pred <- predict(fit.model, newdata=as.matrix(dat_test))
   }
   return(pred)

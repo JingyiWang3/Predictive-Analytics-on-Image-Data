@@ -40,20 +40,20 @@ cv <- function(dat_train ,label_train,
     
     # run adaboost model
     if(run.adaboost == T){
-      fit.model <- train(train.data, train.label, run.adaboost = T)
-      pred <- test(fit.model, test.data, run.adaboost = T)
+      fit.model <- train(train.data, train.label, run.adaboost = T, par = par)
+      pred <- test(fit.model, test.data, run.adaboost = T, par = par)
     }
     
     # run gbm model
     if(run.gbm == T){
-      fit.model <- train(train.data, train.label, run.gbm = T)
-      pred <- test(fit.model, test.data, run.gbm = T)
+      fit.model <- train(train.data, train.label, run.gbm = T, par = par)
+      pred <- test(fit.model, test.data, run.gbm = T, par=par)
     }
     
     # run xgboost model
     if(run.xgboost == T){
-      fit.model <- train(train.data, train.label, run.xgboost = T)
-      pred <- test(fit.model, test.data, run.xgboost = T)
+      fit.model <- train(train.data, train.label, run.xgboost = T, par = par)
+      pred <- test(fit.model, test.data, run.xgboost = T, par = par)
     }
     
     ## calculate cv error

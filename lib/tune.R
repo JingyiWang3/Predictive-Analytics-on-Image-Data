@@ -25,7 +25,7 @@ tune <- function(dat_train ,label_train,
   library("xgboost")
   
   ### load functions 
-  source("../lib/cross_validation.R")
+  source("./lib/cross_validation.R")
   
   #############################################
   
@@ -69,12 +69,12 @@ tune <- function(dat_train ,label_train,
     for (i in 1:length(shrinks_range)){
       for (j in 1:length(trees_range)){
       par <- list(shrinkage = shrinks_range[i], ntrees = trees_range[j] )
-      cv.error[i,j] <- cv(dat_train, label_train, run.adaboost = T, par = par)$error
+      error_matrix[i,j] <- cv(dat_train, label_train, run.gbm= T, par = par)$error
       }
     }
     
     # best cv.error
-    cv_error =  min(cv.error)
+    cv_error =  min(error_matrix)
     
     # best parameter
     best_par = list(shrinkage = shrinks_range[which(error_matrix == min(error_matrix), arr.ind = T)[1]],

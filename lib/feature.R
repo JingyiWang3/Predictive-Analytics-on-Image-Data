@@ -30,8 +30,8 @@ feature <- function(img_dir = NULL, par = NULL){
   if(is.null(par)){
     # set default number to our tuned best parameter
     nR <- 10
-    nG <- 12
-    nB <- 12 
+    nG <- 10
+    nB <- 10
   }
   else{
     nR <- par$nR

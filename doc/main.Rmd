@@ -35,7 +35,7 @@ setwd("./ads_spr2017_proj3")
 
 Provide directories for raw images. Training set and test set should be in different subfolders. 
 ```{r}
-experiment_dir <- "../data/zipcode/" # This will be modified for different data sets.
+experiment_dir <- "./data/zipcode/" # This will be modified for different data sets.
 img_train_dir <- paste(experiment_dir, "train/", sep="")
 img_test_dir <- paste(experiment_dir, "test/", sep="")
 ```
@@ -82,7 +82,7 @@ For this simple example, we use the row averages of raw pixel values as the visu
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
 
 ```{r feature}
-source("../lib/feature.R")
+source("./lib/feature.R")
 
 tm_feature_train <- NA
 if(run.feature.train){
@@ -117,22 +117,22 @@ Call the train model and test model from library.
   + Input: an R object that contains a trained classifier.
   + Output: an R object of class label predictions on the test set. If there are multiple classifiers under evaluation, there should be multiple sets of label predictions. 
 ```{r loadlib}
-source("../lib/train.R")
-source("../lib/test.R")
+source("./lib/train.R")
+source("./lib/test.R")
 ```
 
 #### Model selection with cross-validation
 * Do model selection by choosing among different values of training model parameters, that is, the interaction depth for GBM in this example. 
 ```{r runcv, message=FALSE, warning=FALSE}
-source("../lib/cross_validation.R")
+source("./lib/cross_validation.R")
 
 if(run.cv){
   err_cv <- array(dim=c(length(model_values), 2))
   for(k in 1:length(model_values)){
     cat("k=", k, "\n")
-    err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
+    err_cv[k,] <- cv(dat_train, label_train, model_values[k], K)$error
   }
-  save(err_cv, file="../output/err_cv.RData")
+  save(err_cv, file="./output/err_cv.RData")
 }
 ```
 
@@ -140,8 +140,8 @@ Visualize cross-validation results.
 
 ```{r cv_vis}
 if(run.cv){
-  load("../output/err_cv.RData")
-  #pdf("../fig/cv_results.pdf", width=7, height=5)
+  load("./output/err_cv.RData")
+  #pdf("./fig/cv_results.pdf", width=7, height=5)
   plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
        main="Cross Validation Error", type="n", ylim=c(0, 0.25))
   points(model_values, err_cv[,1], col="blue", pch=16)
@@ -167,7 +167,7 @@ par_best <- list(depth=model_best)
 ```{r final_train}
 tm_train=NA
 tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
-save(fit_train, file="../output/fit_train.RData")
+save(fit_train, file="./output/fit_train.RData")
 ```
 
 ### Step 5: Make prediction 
@@ -175,10 +175,10 @@ Feed the final training model with the completely holdout testing data.
 ```{r test}
 tm_test=NA
 if(run.test){
-  load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
-  load(file="../output/fit_train.RData")
+  load(file=paste0("./output/feature_", "zip", "_", "test", ".RData"))
+  load(file="./output/fit_train.RData")
   tm_test <- system.time(pred_test <- test(fit_train, dat_test))
-  save(pred_test, file="../output/pred_test.RData")
+  save(pred_test, file="./output/pred_test.RData")
 }
 ```
 

@@ -5,13 +5,10 @@
 ### Authors: Group 9
 ### ADS Spring2018
 
-# load image
-img_dir = "../data/train/images/"
-
 # load feature
-rgb_feature <- read.csv('../data/rgb_feature.csv',header = T)
-gist_feature <- read.csv('../data/gist_feature/gistfea512.csv',header = F)
-SIFT_feature <- read.csv('../data/train/SIFT_train.csv',header = F)[,-1]
+rgb_feature <- read.csv('./data/rgb_feature.csv',header = T)
+gist_feature <- read.csv('./data/gist_feature/gistfea512.csv',header = F)
+SIFT_feature <- read.csv('./data/train/SIFT_train.csv',header = F)[,-1]
 
 # set seed
 set.seed(1234)
@@ -36,10 +33,10 @@ label_test <- all.label[test.ind]
 # train data
 rgb_train <- rgb_feature[train.ind,] # rgb train data
 gist_train <- gist_feature[train.ind,] # gist train data
-sift_train <- SIFT_train[train.ind,] # sift train data
+sift_train <- SIFT_feature[train.ind,] # sift train data
 
 # test data
 rgb_test <- rgb_feature[test.ind,] # rgb train data
 gist_test <- gist_feature[test.ind,] # gist train data
-sift_test <- SIFT_train[test.ind,] # sift train data
+sift_test <- SIFT_feature[test.ind,] # sift train data
 

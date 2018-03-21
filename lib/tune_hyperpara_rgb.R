@@ -6,9 +6,9 @@
 ### ADS Spring2018
 
 # load feature extraction function and some other files
-source("../lib/feature.R")
-source("../lib/Split_Data.R")
-source("../lib/cross_validation.R")
+source("./lib/feature.R")
+source("./lib/Split_Data.R")
+source("./lib/cross_validation.R")
 
 # create rgb label
 rgb_label <- c(rep(0,1000),rep(1,1000),rep(2,1000))
@@ -21,7 +21,7 @@ par888 = list(nR = 8, nG = 8, nB = 8)
 rgb888 <- feature(par = par888)
 
 # compute cv error and sd
-cv888 <- cv(rgb888 ,rgb_label, run.xgboost = T, K = 5, par = par888)
+cv888 <- cv(rgb_train ,label_train, run.xgboost = T, K = 5, par = par888)
 cv888
 # $error
 # [1] 0.1016667

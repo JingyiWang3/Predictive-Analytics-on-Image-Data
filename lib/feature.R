@@ -23,7 +23,7 @@ feature <- function(img_dir = NULL, par = NULL){
   library("grDevices")
   
   if(is.null(img_dir)){
-    img_dir = "../data/train/images/"
+    img_dir = "./data/train/images/"
   }
   
   ### Define the bin number of R, G and B

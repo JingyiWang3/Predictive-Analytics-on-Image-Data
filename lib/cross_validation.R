@@ -21,8 +21,8 @@ cv <- function(dat_train ,label_train,
   library("xgboost")
   
   ### load funcions 
-  source("../lib/train.R")
-  source("../lib/test.R")
+  source("./lib/train.R")
+  source("./lib/test.R")
   
   
   n <- length(label_train)

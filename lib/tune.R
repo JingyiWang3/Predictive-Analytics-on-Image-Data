@@ -69,7 +69,7 @@ tune <- function(dat_train ,label_train,
     for (i in 1:length(shrinks_range)){
       for (j in 1:length(trees_range)){
       par <- list(shrinkage = shrinks_range[i], ntrees = trees_range[j] )
-      cv.error[i] <- cv(dat_train, label_train, run.adaboost = T, par = par)$error
+      cv.error[i,j] <- cv(dat_train, label_train, run.adaboost = T, par = par)$error
       }
     }
     
@@ -98,7 +98,7 @@ tune <- function(dat_train ,label_train,
       for (j in 1:length(min_child_weight_values)){
         
         par <- list(depth = max_depth_values[i], child_weight = min_child_weight_values[j] )
-        error_matrix[i] <- cv(dat_train, label_train, run.xgboost = T, par = par)$error
+        error_matrix[i,j] <- cv(dat_train, label_train, run.xgboost = T, par = par)$error
       }
     }
     

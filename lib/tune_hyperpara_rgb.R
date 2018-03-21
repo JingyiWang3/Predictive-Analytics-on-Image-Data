@@ -21,7 +21,7 @@ par888 = list(nR = 8, nG = 8, nB = 8)
 rgb888 <- feature(par = par888)
 
 # compute cv error and sd
-cv888 <- cv(rgb_train ,label_train, run.xgboost = T, K = 5, par = par888)
+cv888 <- cv(rgb888 ,rgb_label, run.xgboost = T, K = 5, par = par888)
 cv888
 # $error
 # [1] 0.1016667

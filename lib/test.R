@@ -38,7 +38,8 @@ test <- function(fit.model, dat_test,
     }else{
       ntrees = par$ntrees
     }
-    pred <- predict(fit.model, newdata=as.data.frame(dat_test),n.trees = 50)
+    pred.prob <- predict(fit.model, newdata=as.data.frame(dat_test),n.trees = ntrees,type= "response")
+    pred = apply(pred.prob,1,which.max )-1
   }
   
   if (run.xgboost ==T){

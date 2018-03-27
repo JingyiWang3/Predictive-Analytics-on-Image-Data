@@ -35,8 +35,8 @@ train <- function(dat_train, label_train,
   if(run.gbm == T){
     
     if(is.null(par)){
-      ntrees = 50
-      shrinkage = 0.001
+      ntrees = 100
+      shrinkage = 0.01
     }
     else{
       ntrees = par$ntrees

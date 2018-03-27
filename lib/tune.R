@@ -59,9 +59,8 @@ tune <- function(dat_train ,label_train,
   if(run.gbm == T){
     
     ## parameter pool
-    shrinks_range <- c(0.01,0.1,0.3)
-    trees_range  <- c(40,50,60)
-    
+    shrinks_range <- c(0.01,0.05,0.1,0.15,0.2)
+    trees_range  <- c(40,50,60,70,100)
     ## initial cv error
     error_matrix = matrix(NA,nrow = length(shrinks_range), length(trees_range))
     

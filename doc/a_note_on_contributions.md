@@ -23,8 +23,9 @@ Yiran Jiang
 Jingyi Wang 
 + Established and optimized the Baseline model.
 + Tuned the baseline model parameters and used heatmap for visualizing its results.
-+ Tuned the parameters for xgboost model under SIFT, GIST and RGB features. 
++ Established xgboost model, tuned the parameters for xgboost model under SIFT, GIST and RGB features. 
 + Wrote train, test and cross_validation functions, combined above functions with .Rmd files.
++ Added more details to presentation slides.
 
 Xueyao Li 
 + Established and optimized linear SVM and RBF SVM model.

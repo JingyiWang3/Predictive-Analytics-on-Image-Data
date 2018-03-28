@@ -178,7 +178,7 @@ if(run.test == T) load("../output/feature_test.RData")
 decide whether to combine rgb and gist feature
 ```{r}
 if(run.merge == T){
-  gist_train <- read.csv('./data/gist_feature/gistfea512.csv',header = F)
+  gist_train <- read.csv('../data/gist_feature/gistfea512.csv',header = F)
   dat_train = cbind(rgb_feature, gist_train)
   if(run.test == T){
     gist_test <- read.csv('../data/gist_feature.csv',header = F)

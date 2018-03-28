@@ -1,6 +1,6 @@
 # Project 3: Dogs, Fried Chicken or Blueberry Muffins?
-![image](figs/chicken.png = 250x)
-![image](figs/muffin.png = 250x)
+![image](figs/chicken.png)
+![image](figs/muffin.png)
 
 ### [Project Description](https://github.com/TZstatsADS/ADS_Teaching/blob/master/Projects_StarterCodes/Project3_PoodleKFC/doc/project3_desc.md)
 
@@ -17,7 +17,7 @@ Term: Spring 2018
 
 + **Project summary**: 
 
-In this project, we created a classification engine for images of dogs versus fried chicken versus blueberry muffins. The baseline model used GBM with decision stumps on SIFT features. For feature extraction, besides the SIFT, we also tried RGB and GIST. For advanced model, we considered SVM(Linear and RBF kernel), XGBoost, AdaBoost and Neural Network(CNN).
+In this project, we created a classification engine for images of dogs versus fried chicken versus blueberry muffins. The baseline model usedÂ GBM withÂ decision stumpsÂ onÂ SIFT features. For feature extraction, besides the SIFT, we also tried RGB and GIST. For advanced model, we considered SVM(Linear and RBF kernel), XGBoost, AdaBoost and Neural Network(CNN).
 
 After model evaluation and comparison, XGBoost achieved the best performance. Then we tuned RGB hyper parameters and considered the combination of features. Comparing different features on XGBoost, we chose the RGB+Gist. The final model reduced the test error to 8.10% with a running time 83.249s.
 

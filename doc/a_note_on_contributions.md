@@ -11,10 +11,18 @@ Below is an example. If no contribution statement is provided, we will insert a 
 ---
 Sample project README statement.
 
-Project xxx
+Project 3
 
-Team members: Avi Bond, Comma Deed, En Funn, Gem Hon
+Team members: Fan Yang; Yiran Jiang; Jingyi Wang; Xueyao Li
 
 Summary: In this project, we developed a new method and improved the classification accuracy for images of cats and dogs to 99.9%
 
-[Contribution Statement] AB, CD, EF and GH designed the study. AB and CD developed baseline classification model for evaluation. EF and GH explored feature engineering for improving the baseline model. AB, EF and GH discussed and designed the model evaluation protocol. CD carried out the computation for model evaluation. All team members contributed to the GitHub repository and prepared the presentation. All team members approve our work presented in our GitHub repository including this contribution statement.
+[Contribution Statement] 
+
+Fan Yang - Extracted RGB and GIST features; tuned rgb hyper parameters and corresponding xgboost model parameters. Wrote the main adaboost cross validation functions; compared different model performance; created structure of project and organized GitHub directory; made presentation.
+
+Yiran Jiang - Established and optimized Convolution Neural Network(CNN/Python) model; made data preprocessing and tested on the Neural Network; implemented all connection of Python code and CNN model with .Rmd files. Provided visualized results of different models. Conducted memory comparisons between different models. Wrote main.rmd file and added connections to all other functions.
+
+Jingyi Wang - Established and optimized the Baseline model; tuned the baseline model parameters and used heatmap for visualizing its results; tuned the parameters for xgboost model under SIFT, GIST and RGB features. Wrote train, test and cross_validation functions, combined above functions with .Rmd files.
+
+Xueyao Li - Worked on SVM model and tried linear SVM and RBF SVM; tuned parameters for SVM model and created heatmap for tuning process. Helped making presentation slides and wrote readme file. Conducted time and cv error comparison between different models.

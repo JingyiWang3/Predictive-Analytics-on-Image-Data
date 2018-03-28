@@ -43,8 +43,12 @@ test <- function(fit.model, dat_test,
   }
   
   if (run.xgboost ==T){
-    
-    pred <- predict(fit.model, newdata=as.matrix(dat_test))
+    if(is.null(par)){
+      ntrees = 100
+    }else{
+      ntrees = par$ntrees
+    }
+    pred <- predict(fit.model, newdata=as.matrix(dat_test), n.trees = ntrees)
   }
   return(pred)
 }

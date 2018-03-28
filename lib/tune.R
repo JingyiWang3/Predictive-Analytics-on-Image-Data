@@ -27,7 +27,7 @@ tune <- function(dat_train ,label_train,
   library("xgboost")
   
   ### load functions 
-  source("./lib/cross_validation.R")
+  source("../lib/cross_validation.R")
   
   #############################################
   

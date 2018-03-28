@@ -33,8 +33,8 @@ library("xgboost")
 ```
 ###Set relative path for training and test dataset.
 ```{r}
-experiment_dir <- "../data/training_set/"
-img_train_dir <- paste(experiment_dir, "train/", sep="")
+experiment_dir <- "../data/"
+img_train_dir <- paste(experiment_dir, "train/images/", sep="")
 img_test_dir <- paste(experiment_dir, "test/", sep="")
 ```
 ### Step 1: set up controls for evaluation experiments.
@@ -53,9 +53,7 @@ run.tune = TRUE
 ```
 ####Boolean variables for Feature Extraction procedures
 ```{r}
-run.gbm = FALSE
-run.xgboost = FALSE
-run.svm = FALSE
+run.feature.train = TRUE
 ```
 ####Boolean variables indicating which model to run
 ```{r}
@@ -68,7 +66,7 @@ Using cross-validation or independent test set evaluation, we compare the perfor
 shrinks_range <- c(0.01,0.05,0.1,0.15,0.2) #for gbm
 trees_range  <- c(40,50,60,70,100) #for gbm
 mfinal <- c(50, 75, 100, 125) # for adaboost
-max_depth_values<-seq(4,9,2) #for xgboost
+max_depth_values<-seq(3,9,2) #for xgboost
 min_child_weight_values <- seq(1,6,2) #for xgboost
 ```
 ### Step 2: import training images class labels.
@@ -81,13 +79,13 @@ For this simple example, we use the row averages of raw pixel values as the visu
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
 ```{r feature}
 source("../lib/feature.R")
-tm_feature_train <- NA
+
 if(run.feature.train){
   rgb_feature <- feature(img_dir = img_train_dir, par = NULL)
   
 }
-
-save(rgb_feature, file="./output/feature_train.RData")
+dat_train <- rgb_feature
+save(rgb_feature, file="../output/feature_train.RData")
 ```
 ### Step 4: Train a classification model with training images
 Call the train model and test model from library. 
@@ -109,15 +107,15 @@ load("../output/feature_train.RData")
 #### Model selection with cross-validation
 * Do model selection by choosing among different values of training model parameters, that is, the interaction depth for GBM in this example. 
 ```{r runcv, message=FALSE, warning=FALSE}
-source("lib/cross_validation.R")
+source("../lib/cross_validation.R")
 if(run.cv){
-err_cv <- cv(rgb_feature ,label_train,
-             run.xgboost = F,
+err_cv <- cv(dat_train ,label_train,
+             run.xgboost = T,
              run.gbm = F,
              run.adaboost = F,
              K = 5, 
              par = NULL)$error
-  
+
   save(err_cv, file="../output/err_cv.RData")
 }
 #0.2773333 0.01346807
@@ -131,15 +129,15 @@ if(run.cv){
 ```
 * Choose the "best"" parameter value
 ```{r}
-source("lib/tune.R")
+source("../lib/tune.R")
 if(run.tune){
 
-  param <- tune(dat_train ,label_train,
-                 run.xgboost = F,
+  par_best <- tune(dat_train ,label_train,
+                 run.xgboost = T,
                  run.gbm = F,
-                 run.adaboost = F)$best_par
+                 run.adaboost = F)
   }
-print("Best parameter is:", param)
+print("Best parameter is:", par_best)
 
 ```
 
@@ -154,12 +152,11 @@ Feed the final training model with the completely holdout testing data.
 ```{r test}
 tm_test=NA
 if(run.test){
-test <- function(fit_train, dat_test,
+test_pred <- test(fit_train, dat_test,
                  run.xgboost = T, run.gbm = F,
                  run.adaboost = F, par=NULL)
-  
-}
- 
+  }
+mean(test_pred!=label_test)
 ```
 ### Summarize Running Time
 Prediction performance matters, so does the running times for constructing features and for training the model, especially when the computation resource is limited. 

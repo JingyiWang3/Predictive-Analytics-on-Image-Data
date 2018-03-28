@@ -2,7 +2,7 @@
 
 Project 3
 
-[Contribution Statement] 
+Contribution Statement 
 
 Fan Yang 
 + Extracted RGB and GIST features.

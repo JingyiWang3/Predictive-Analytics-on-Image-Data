@@ -44,9 +44,9 @@ feature <- function(img_dir = NULL, par = NULL){
   bBin <- seq(0, 1, length.out=nB)
   mat=array()
   freq_rgb=array()
-  rgb_feature=matrix(nrow=3000, ncol=nR*nG*nB)
-  
   n_files <- length(list.files(img_dir))
+  
+  rgb_feature=matrix(nrow=n_files, ncol=nR*nG*nB)
   
   if(n_files == 0){
     print("no file  in the directory")
@@ -54,9 +54,9 @@ feature <- function(img_dir = NULL, par = NULL){
   }
   
   ########extract RGB features############
-
+  img_name <- list.files(path =img_dir)
   for (i in 1:n_files ){
-    mat <- imageData(readImage(paste0(img_dir, sprintf("%04.f",i), ".jpg")))
+    mat <- imageData(readImage(paste0(img_dir, img_name[i])))
     mat_as_rgb <-array(c(mat,mat,mat),dim = c(nrow(mat),ncol(mat),3))
     freq_rgb <- as.data.frame(table(factor(findInterval(mat_as_rgb[,,1], rBin), levels=1:nR), 
                                     factor(findInterval(mat_as_rgb[,,2], gBin), levels=1:nG),

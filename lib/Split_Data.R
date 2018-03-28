@@ -6,7 +6,7 @@
 ### ADS Spring2018
 
 # load feature
-rgb_feature <- read.csv('./data/rgb_feature.csv',header = T)
+rgb_feature <- read.csv('./data/rgb_feature.csv',header = T)[,-1]
 gist_feature <- read.csv('./data/gist_feature/gistfea512.csv',header = F)
 SIFT_feature <- read.csv('./data/train/SIFT_train.csv',header = F)[,-1]
 

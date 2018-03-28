@@ -8,7 +8,8 @@
 tune <- function(dat_train ,label_train,
                  run.xgboost = F,
                  run.gbm = F,
-                 run.adaboost = F){
+                 run.adaboost = F,
+                 verbose = FALSE){
   
   ### tune parameter
   
@@ -16,6 +17,7 @@ tune <- function(dat_train ,label_train,
   ###   dat_train -  processed features from images 
   ###   label_train -  class labels for training images
   ###   run.xxxxxx - select which model to fit
+  ###   verbose - TRUE means print cv error while every loop
   ### Output: 
   ###   best parameter
   
@@ -63,12 +65,19 @@ tune <- function(dat_train ,label_train,
     trees_range  <- c(40,50,60,70,100)
     ## initial cv error
     error_matrix = matrix(NA,nrow = length(shrinks_range), length(trees_range))
+    rownames(error_matrix) <- paste(shrinks_range)
+    colnames(error_matrix) <- paste(trees_range)
+    ## initial cv sd
+    sd_matrix = matrix(NA,nrow = length(shrinks_range), length(trees_range))
+    rownames(sd_matrix) <- paste(shrinks_range)
+    colnames(sd_matrix) <- paste(trees_range)
     
     ## loop parameter combination
     for (i in 1:length(shrinks_range)){
       for (j in 1:length(trees_range)){
       par <- list(shrinkage = shrinks_range[i], ntrees = trees_range[j] )
       error_matrix[i,j] <- cv(dat_train, label_train, run.gbm= T, par = par)$error
+      sd_matrix[i,j] <- cv(dat_train, label_train, run.gbm= T, par = par)$sd
       }
     }
     
@@ -91,13 +100,20 @@ tune <- function(dat_train ,label_train,
     
     # error matrix
     error_matrix = matrix(NA,nrow = length(max_depth_values), length(min_child_weight_values))
+    rownames(error_matrix) <- paste(max_depth_values)
+    colnames(error_matrix) <- paste(min_child_weight_values)
+    
+    ## cv sd matrix
+    sd_matrix = matrix(NA,nrow = length(max_depth_values), length(min_child_weight_values))
+    rownames(sd_matrix) <- paste(max_depth_values)
+    colnames(sd_matrix) <-  paste(min_child_weight_values)
     
     #tuning process
     for (i in 1:length(max_depth_values)){
       for (j in 1:length(min_child_weight_values)){
-        
         par <- list(depth = max_depth_values[i], child_weight = min_child_weight_values[j] )
         error_matrix[i,j] <- cv(dat_train, label_train, run.xgboost = T, par = par)$error
+        sd_matrix[i,j] <- cv(dat_train, label_train, run.xgboost = T, par = par)$sd
       }
     }
     
@@ -107,6 +123,11 @@ tune <- function(dat_train ,label_train,
     best_par = list(depth = max_depth_values[which(error_matrix == min(error_matrix), arr.ind = T)[1]],
                     child_weight = min_child_weight_values[which(error_matrix == min(error_matrix), arr.ind = T)[2]])
 
+  }
+  
+  if(verbose == TRUE){
+    print(error_matrix)
+    print(sd_matrix)
   }
   
   return(list(cv_error,best_par))

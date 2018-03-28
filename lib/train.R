@@ -36,20 +36,20 @@ train <- function(dat_train, label_train,
     
     if(is.null(par)){
       ntrees = 100
-      shrinkage = 0.01
+      shrinkage = 0.1
     }
     else{
       ntrees = par$ntrees
       shrinkage = par$shrinkage
     }
-    fit.model <- gbm(label_train~., 
-                     data = dat_train,
-                     interaction.depth = 3, 
-                     shrinkage = shrinkage,
-                     bag.fraction = 0.5,
-                     n.trees = ntrees,
-                     verbose = TRUE,
-                     distribution="multinomial")
+    fit.model <- gbm.fit(x = dat_train,
+                         y = label_train,
+                         interaction.depth = 3, 
+                         shrinkage = shrinkage,
+                         bag.fraction = 0.5,
+                         n.trees = ntrees,
+                         verbose = FALSE,
+                         distribution="multinomial")
   }
   
   ###############################################################
@@ -84,8 +84,8 @@ train <- function(dat_train, label_train,
       depth <- 5
       child_weight <- 3
     } else {
-      depth <- par$max.depth
-      child_weight <- par$min_child_weight
+      depth <- par$depth
+      child_weight <- par$child_weight
     }
     
     # create xgb.Dmatrix

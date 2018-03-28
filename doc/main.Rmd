@@ -99,7 +99,7 @@ if(run.gbm == T){
   SIFT_feature <- read.csv('../data/train/SIFT_train.csv',header = F)[,-1]
   # import SIFT test feature
   if(run.SIFT.test == T){
-    SIFT_feature_test <- read.csv('../data/train/SIFT_test.csv',header = F)[,-1]
+    SIFT_feature_test <- read.csv('../data/test/SIFT_test.csv',header = F)[,-1]
   }
 }
 ```
@@ -131,7 +131,7 @@ load("../output/fit_train_baseline.RData")
 Whether to run SIFT test to make predictions
 ```{r}
 if(run.SIFT.test){
-  test_baseline_pred <- test(SIFT_feature_test, dat_test,
+  test_baseline_pred <- test(fit_train_baseline,SIFT_feature_test,
                          run.xgboost = F, run.gbm = T,
                          run.adaboost = F, par=NULL)
   save(test_baseline_pred, file = "../output/test_baseline_pred.RData")

@@ -37,6 +37,15 @@ experiment_dir <- "../data/"
 img_train_dir <- paste(experiment_dir, "train/images/", sep="")
 img_test_dir <- paste(experiment_dir, "test/", sep="")
 ```
+###Set seed and import functions
+```{r}
+set.seed(1234)
+source("../lib/train.R")
+source("../lib/test.R")
+source("../lib/feature.R")
+source("../lib/cross_validation.R")
+source("../lib/tune.R")
+```
 ### Step 1: set up controls for evaluation experiments.
 In this chunk, ,we have a set of controls for the evaluation experiments. 
 + (T/F) cross-validation on the training set
@@ -47,19 +56,23 @@ In this chunk, ,we have a set of controls for the evaluation experiments.
 ```{r exp_setup}
 run.cv=TRUE # run cross-validation on the training set
 K <- 5  # number of CV folds
-run.feature=TRUE # process features for training set
-run.test=TRUE # run evaluation on an independent test set
-run.tune = TRUE
+run.test=FALSE # run evaluation on an independent test set
+run.tune = FALSE
 ```
 ####Boolean variables for Feature Extraction procedures
 ```{r}
-run.feature.train = TRUE
+run.feature.train = FALSE
+run.feature.test = FALSE
 ```
 ####Boolean variables indicating which model to run
 ```{r}
-run.gbm = FALSE
+run.gbm = TRUE   # if choose gbm, then we are running baseline model
 run.xgboost = FALSE
 run.svm = FALSE
+
+run.merge = FALSE
+run.baseline.retrain = FALSE
+run.SIFT.test = FALSE
 ```
 Using cross-validation or independent test set evaluation, we compare the performance of different classifiers or classifiers with different specifications. In this example, we use GBM with different `depth`. In the following chunk, we list, in a vector, setups (in this case, `depth`) corresponding to models that we will compare. In your project, you maybe comparing very different classifiers. You can assign them numerical IDs and labels specific to your project. 
 ```{r model_setup}
@@ -74,40 +87,107 @@ min_child_weight_values <- seq(1,6,2) #for xgboost
 ```{r train_label}
 label_train <- c(rep(0,1000),rep(1,1000),rep(2,1000))
 ```
-### Step 3: construct visual feature
+
+### Step 3: baseline model
+Import SIFT feature
+```{r}
+if(run.gbm == T){
+  # import SIFT feature
+  SIFT_feature <- read.csv('../data/train/SIFT_train.csv',header = F)[,-1]
+  # import SIFT test feature
+  if(run.SIFT.test == T){
+    SIFT_feature_test <- read.csv('../data/train/SIFT_test.csv',header = F)[,-1]
+  }
+}
+```
+Tune parameter
+```{r}
+# decide whether tune parameters
+if(run.tune == T){
+   par_best_baseline <- tune(dat_train ,label_train,
+               run.xgboost = T,
+               run.gbm = F,
+               run.adaboost = F)
+save(par_best_baseline,file = "par_best_baseline.RData")
+print("Best parameter is:", par_best_baseline)
+}
+
+# load best parameter for baseline model
+load("../output/par_best_baseline.RData")
+```
+Whether retrain baseline model
+```{r}
+if(run.baseline.retrain == T){
+  tm_train_baseline <- system.time(
+    fit_train_baseline <- train(SIFT_feature, label_train, par_best_baseline)
+    )
+  save(fit_train_baseline, file="../output/fit_train_baseline.RData")
+}
+load("../output/fit_train_baseline.RData")
+```
+Whether run SIFT test
+```{r}
+if(run.SIFT.test){
+  test_baseline_pred <- test(SIFT_feature_test, dat_test,
+                         run.xgboost = F, run.gbm = T,
+                         run.adaboost = F, par=NULL)
+  save(test_baseline_pred, file = "../output/test_baseline_pred.RData")
+  write.csv(test_baseline_pred, file = "../output/test_baseline_pred.csv")
+}
+```
+### Step 4: construct visual feature
 For this simple example, we use the row averages of raw pixel values as the visual features. Note that this strategy **only** works for images with the same number of rows. For some other image datasets, the feature function should be able to handle heterogeneous input images. Save the constructed features to the output subfolder.
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
 ```{r feature}
-source("../lib/feature.R")
-
 if(run.feature.train){
   rgb_feature <- feature(img_dir = img_train_dir, par = NULL)
-  
+  save(rgb_feature, file="../output/feature_train.RData")
 }
-dat_train <- rgb_feature
-save(rgb_feature, file="../output/feature_train.RData")
+if(run.feature.test){
+  rgb_test <- feature(img_dir = img_test_dir, par = NULL)
+  save(rgb_test, file="../output/feature_test.RData")
+}
 ```
-### Step 4: Train a classification model with training images
+### Step 5: Train a classification model with training images
 Call the train model and test model from library. 
 `train.R` and `test.R` should be wrappers for all your model training steps and your classification/prediction steps. 
 + `train.R`
-  + Input: a path that points to the training set features.
-  + Input: an R object of training sample labels.
-  + Output: an RData file that contains trained classifiers in the forms of R objects: models/settings/links to external trained configurations.
+  + Input: 
+  +   dat_train -  processed features from images 
+  +   label_train -  class labels for training images
+  +   run.xxxxxx - select which model to fit
+  +   par - specified parameters, otherwise use default
+  + Output: 
+  +   fitted model models/settings/links to external trained configurations.
 + `test.R`
-  + Input: a path that points to the test set features.
-  + Input: an R object that contains a trained classifier.
-  + Output: an R object of class label predictions on the test set. If there are multiple classifiers under evaluation, there should be multiple sets of label predictions. 
-```{r loadlib}
-source("../lib/train.R")
-source("../lib/test.R")
-
+  + Input:
+  +   dat_test - processed features from testing images 
+  +   run.xxxxxx - select which model to fit
+  +   par - specified parameters, otherwise use default
+  + Output: 
+  +   model prediction
+```{r loadfeature}
 load("../output/feature_train.RData")
+if(run.test == T) load("../output/feature_test.RData")
+```
+
+decide whether to merge feature
+```{r}
+if(run.merge == T){
+  gist_train <- read.csv('./data/gist_feature/gistfea512.csv',header = F)
+  dat_train = cbind(rgb_feature, gist_train)
+  if(run.test == T){
+    gist_test <- read.csv('../data/gist_feature.csv',header = F)
+    dat_test = cbind(rgb_test, gist_test)
+  }
+}else{
+  dat_train = rgb_feature
+  if(run.test == T) dat_test = rgb_test
+}
 ```
 #### Model selection with cross-validation
 * Do model selection by choosing among different values of training model parameters, that is, the interaction depth for GBM in this example. 
 ```{r runcv, message=FALSE, warning=FALSE}
-source("../lib/cross_validation.R")
 if(run.cv){
 err_cv <- cv(dat_train ,label_train,
              run.xgboost = T,
@@ -118,51 +198,52 @@ err_cv <- cv(dat_train ,label_train,
 
   save(err_cv, file="../output/err_cv.RData")
 }
-#0.2773333 0.01346807
 ```
 
 Visualize cross-validation results. 
 ```{r cv_vis}
 if(run.cv){
-  load("output/err_cv.RData")
+  load("../output/err_cv.RData")
 }
 ```
 * Choose the "best"" parameter value
 ```{r}
-source("../lib/tune.R")
+
 if(run.tune){
 
   par_best <- tune(dat_train ,label_train,
                  run.xgboost = T,
                  run.gbm = F,
                  run.adaboost = F)
+  save(par_best,file = "../output/par_best.RData")
+  print("Best parameter is:", par_best)
   }
-print("Best parameter is:", par_best)
-
 ```
 
 * Train the model with the entire training set using the selected model (model parameter) via cross-validation.
 ```{r final_train}
 tm_train=NA
+load("../output/par_best.RData")
 tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
 save(fit_train, file="../output/fit_train.RData")
 ```
-### Step 5: Make prediction 
+### Step 6: Make prediction 
 Feed the final training model with the completely holdout testing data. 
 ```{r test}
 tm_test=NA
 if(run.test){
-test_pred <- test(fit_train, dat_test,
-                 run.xgboost = T, run.gbm = F,
-                 run.adaboost = F, par=NULL)
+  test_pred <- test(fit_train, dat_test,
+                   run.xgboost = T, run.gbm = F,
+                   run.adaboost = F, par=NULL)
+  save(test_pred,file = "..output/test_pred.RData")
+  write.csv(test_pred,file = "../output/test_pred.csv")
   }
-mean(test_pred!=label_test)
 ```
 ### Summarize Running Time
 Prediction performance matters, so does the running times for constructing features and for training the model, especially when the computation resource is limited. 
 ```{r running_time}
-cat("Time for constructing training features=", tm_feature_train[1], "s \n")
-cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
+cat("Time for constructing training features=", tm_train[1], "s \n")
+cat("Time for constructing testing features=", tm_test[1], "s \n")
 cat("Time for training model=", tm_train[1], "s \n")
 cat("Time for making prediction=", tm_test[1], "s \n")
 ```

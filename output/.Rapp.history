@@ -1,0 +1,9 @@
+load("/Users/fanerror/GitHub/Spring2018-Project3-Group9/output/feature_train.RData")
+ls
+ls()
+dat_train <- rgb_feature
+save(dat_train,file = "feature_train.RData")
+q()
+load("/Users/fanerror/GitHub/Spring2018-Project3-Group9/output/feature_train.RData")
+ls()
+q()

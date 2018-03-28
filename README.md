@@ -19,7 +19,7 @@ Term: Spring 2018
 
 In this project, we created a classification engine for images of dogs versus fried chicken versus blueberry muffins. The baseline model used GBM with decision stumps on SIFT features. For feature extraction, besides the SIFT, we also tried RGB and GIST. For advanced model, we considered SVM(Linear and RBF kernel), XGBoost, AdaBoost and Convolutional Neural Network(CNN).
 
-After model evaluation and comparison, XGBoost achieved the best performance. Then we tuned RGB hyper parameters and considered the combination of features. Comparing different features on XGBoost, we chose the RGB+Gist. The final model reduced the test error to 8.10% with a running time 83.249s.
+After model evaluation and comparison, XGBoost achieved the best performance. Then we tuned RGB hyperparameters and considered the combination of features. Comparing different features on XGBoost, we chose the RGB+Gist. The final model reduced the test error to 8.10% with a running time 83.249s.
 
 Comparison of baseline and advanced models:
 ![model selection](figs/model.png)

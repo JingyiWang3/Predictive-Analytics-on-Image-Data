@@ -1,10 +1,10 @@
 # Dogs, Fried Chicken or Blueberry Muffins?
 
-
 Fried Chicken or Dogs?|  Blueberry Muffins or Dogs?  
 :-------------------------:|:-------------------------:
 <img src="figs/chicken.png" alt="drawing" height = "400px" width="400px"/>  |  <img src="figs/muffin.png" alt="drawing" height = "400px" width="400px"/> 
 
++ This is a modified version of the [team project](https://github.com/TZstatsADS/Spring2018-Project3-Group9)
 
 + Team members
 	+ Fan Yang

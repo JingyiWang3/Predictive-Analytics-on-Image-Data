@@ -1,5 +1,5 @@
 # Dogs, Fried Chicken or Blueberry Muffins?
-<br>
+
 
 Fried Chicken or Dogs?|  Blueberry Muffins or Dogs?  
 :-------------------------:|:-------------------------:
@@ -31,7 +31,7 @@ After model evaluation and comparison, XGBoost achieves the best performance amo
 
 
 **Baseline vs advanced models on running time and test error.**
-<img src="figs/model.png" alt="drawing" height = "300px" width="800px"/>
+<img src="figs/model.png" alt="drawing" height = "400px" width="800px"/>
 
 **Features performance on XGBoost model**
 <img src="figs/feature.png" alt="drawing" height = "300px"  width="800px"/>

@@ -1,44 +1,53 @@
-# Project 3: Dogs, Fried Chicken or Blueberry Muffins?
-![image](figs/chicken.png)
-![image](figs/muffin.png)
+# Dogs, Fried Chicken or Blueberry Muffins?
+<br>
 
-### [Project Description](https://github.com/TZstatsADS/ADS_Teaching/blob/master/Projects_StarterCodes/Project3_PoodleKFC/doc/project3_desc.md)
+Fried Chicken or Dogs?|  Blueberry Muffins or Dogs?  
+:-------------------------:|:-------------------------:
+<img src="figs/chicken.png" alt="drawing" height = "400px" width="400px"/>  |  <img src="figs/muffin.png" alt="drawing" height = "400px" width="400px"/> 
 
-In this project, we will carry out model evaluation and selection for predictive analytics on image data. 
 
-Term: Spring 2018
-
-+ Team 9
 + Team members
 	+ Fan Yang
 	+ Jingyi Wang
 	+ Xueyao Li
 	+ Yiran Jiang
 
-+ **Project summary**: 
+## Introduction 
+The goal is this project is to classify 3000 images of dogs, fried chicken and blueberry muffins and carry out model evaluation and selection for predictive analytics on image data.
 
-In this project, we created a classification engine for images of dogs versus fried chicken versus blueberry muffins. The baseline model used GBM with decision stumps on SIFT features. For feature extraction, besides the SIFT, we also tried RGB and GIST. For advanced model, we considered SVM(Linear and RBF kernel), XGBoost, AdaBoost and Convolutional Neural Network(CNN).
+`main.Rmd`: combine data cleaning, training, parameter tuning, and evaluation togeher. 
 
-After model evaluation and comparison, XGBoost achieved the best performance. Then we tuned RGB hyperparameters and considered the combination of features. Comparing different features on XGBoost, we chose the RGB. The final model reduced the test error to 9.77% with a running time 48.467s.
+## Method
++ **Baseline model:** Gradient Boosting Machine(GBM) with decision stumps on SIFT features. 
++ **Feature extraction methods:** SIFT, RGB and GIST. 
++ **Advanced classification modelS:** SVM(Linear and RBF kernel), XGBoost, AdaBoost and Convolutional Neural Network(CNN).
++ **Final Model:** XGBoost with RGB feature.
 
-Comparison of baseline and advanced models:
-![model selection](figs/model.png)
+## Results
 
-Comparison of different features on XGBoost:
-![feature selection](figs/feature.png)
+After model evaluation and comparison, XGBoost achieves the best performance among all classification methods. After comparing different features on XGBoost, we select the RGB as the final feature. The final model reduced the test error to 9.77% with a running time 48.467s.
 
+
+
+
+**Baseline vs advanced models on running time and test error.**
+<img src="figs/model.png" alt="drawing" height = "300px" width="800px"/>
+
+**Features performance on XGBoost model**
+<img src="figs/feature.png" alt="drawing" height = "300px"  width="800px"/>
+
+
+
+## Reference 
 + **Contribution statement**: ([Team 9 contribution statement](doc/a_note_on_contributions.md)) 
-All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
-
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
-
-```
-proj/
-├── lib/
-├── data/
-├── doc/
-├── figs/
-└── output/
-```
-
-Please see each subfolder for a README file.
++ Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
+	
+	```
+	proj/
+	├── lib/
+	├── data/
+	├── doc/
+	├── figs/
+	└── output/
+	```
+	Please see each subfolder for a README file.
